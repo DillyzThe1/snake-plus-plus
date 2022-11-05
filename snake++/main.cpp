@@ -190,16 +190,6 @@ int main() {
 					case Keyboard::Right:
 						snake_dir = SnakeDirection::RIGHT;
 						break;
-					case Keyboard::P:
-						cout << prev_snake_x[4];
-						cout << ", ";
-						cout << prev_snake_y[4];
-						cout << "\n";
-						cout << prev_snake_x[7];
-						cout << ", ";
-						cout << prev_snake_y[7];
-						cout << "\n";
-						break;
 				}
 
 			if (e.type == Event::Resized)

@@ -12,9 +12,14 @@ int main() {
 	RenderWindow window(VideoMode(480, 480), "Snake++ by DillyzThe1");
 	window.setFramerateLimit(120);
 
-	//Texture icon;
-	//icon.loadFromFile("images/icon");
-	//window.setIcon(350, 350, icon.copyToImage().getPixelsPtr());
+	Texture icon;
+	if (icon.loadFromFile("images/logo.png")) {
+		Image iconImg;
+		iconImg = icon.copyToImage();
+		window.setIcon(350, 350, iconImg.getPixelsPtr());
+	}
+	else
+		cout << "Icon loading FAIL!";
 
 	while (window.isOpen()) {
 		Event e;

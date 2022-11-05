@@ -7,6 +7,9 @@ using namespace sf;
 
 const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24;
 
+int apple_x = 0, apple_y = 0;
+RectangleShape apple;
+
 int getrand() {
 	srand(time(NULL));
 	return rand();
@@ -16,6 +19,23 @@ int rand_int(int min, int max) {
 	srand(rand() * time(NULL) * rand() * 0.5);
 	int num = rand() % (max - min);
 	return num + min;
+}
+
+bool snake_at(int x, int y) {
+	return false;
+}
+
+void apple_respawn() {
+	apple_x = rand_int(0, width);
+	apple_y = rand_int(0, height);
+
+	if (snake_at(apple_x, apple_y))
+	{
+		apple_respawn();
+		return;
+	}
+
+	apple.setPosition(apple_x * (defwinwidth / width), apple_y * (defwinwidth / height));
 }
 
 int main() {
@@ -34,9 +54,8 @@ int main() {
 	else
 		cout << "Icon loading FAIL!";
 
-	RectangleShape apple;
 	apple.setFillColor(Color::Color(172, 50, 50, 255));
-	apple.setPosition(rand_int(0, width) * (defwinwidth / width), rand_int(0, height) * (defwinwidth / height));
+	apple_respawn();
 	apple.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
 
 	while (window.isOpen()) {
@@ -49,7 +68,7 @@ int main() {
 				if (e.key.code == Keyboard::Escape)
 					window.close();
 				else if (e.key.code == Keyboard::Enter)
-					apple.setPosition(rand_int(0, width) * (defwinwidth / width), rand_int(0, height) * (defwinwidth / height));
+					apple_respawn();
 
 			if (e.type == Event::Resized)
 			{

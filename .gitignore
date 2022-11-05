@@ -1,3 +1,5 @@
 .vs/*
 snake++/Debug/*
 Debug/snake++.pdb
+x64/*
+snake++/x64/*

@@ -20,7 +20,7 @@ int apple_x = 0, apple_y = 0;
 RectangleShape apple;
 
 int snake_head_x = 0, snake_head_y = 0, snake_length = 3, spawn_boundries = 4;
-SnakeDirection snake_dir = UP;
+SnakeDirection snake_dir = UP, last_snake_dir = UP;
 RectangleShape snakehead;
 
 int prev_snake_x[max_length], prev_snake_y[max_length];
@@ -28,7 +28,7 @@ RectangleShape bodyrender;
 
 int score = 0;
 
-RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1 v0.5b");
+RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
 
 int getrand() {
 	srand(time(NULL));
@@ -41,6 +41,20 @@ int rand_int(int min, int max) {
 	return num + min;
 }
 
+bool wall_at(int xx, int yy) {
+	if (xx == -1)
+		return true;
+	if (xx == width)
+		return true;
+
+	if (yy == -1)
+		return true;
+	if (yy == height)
+		return true;
+
+	return false;
+}
+
 bool snake_head_at(int xx, int yy) {
 	if (snake_head_x == xx && snake_head_y == yy)
 		return true;
@@ -48,7 +62,7 @@ bool snake_head_at(int xx, int yy) {
 }
 
 bool snake_body_at(int xx, int yy) {
-	for (int i = 0; i < snake_length; i++)
+	for (int i = 0; i < (snake_length - 1); i++)
 		if (prev_snake_x[i] == xx && prev_snake_y[i] == yy)
 			return true;
 	return false;
@@ -75,10 +89,14 @@ void snake_respawn() {
 	score = 0;
 	snake_dir = UP;
 	snake_length = 3;
+	last_snake_dir = UP;
 	apple_respawn();
 
-	snake_head_x = rand_int(spawn_boundries, width - spawn_boundries);
+	prev_snake_x[0] = prev_snake_x[1] = snake_head_x = rand_int(spawn_boundries, width - spawn_boundries);
 	snake_head_y = height - spawn_boundries;
+
+	prev_snake_y[0] = snake_head_y + 1;
+	prev_snake_y[1] = snake_head_y + 2;
 }
 
 void insert_prev(int xx, int yy) {
@@ -125,6 +143,8 @@ void tick() {
 			break;
 	}
 
+	last_snake_dir = snake_dir;
+
 	if (snake_head_at(apple_x, apple_y)) {
 		score += 100;
 		snake_length++;
@@ -136,7 +156,7 @@ void tick() {
 		apple_respawn();
 	}
 
-	if (snake_body_at(snake_head_x, snake_head_y))
+	if (snake_body_at(snake_head_x, snake_head_y) || wall_at(snake_head_x, snake_head_y) || snake_length >= max_length)
 		snake_respawn();
 }
 
@@ -189,16 +209,20 @@ int main() {
 						snake_respawn();
 						break;
 					case Keyboard::Up:
-						snake_dir = SnakeDirection::UP;
+						if (last_snake_dir != SnakeDirection::DOWN)
+							snake_dir = SnakeDirection::UP;
 						break;
 					case Keyboard::Down:
-						snake_dir = SnakeDirection::DOWN;
+						if (last_snake_dir != SnakeDirection::UP)
+							snake_dir = SnakeDirection::DOWN;
 						break;
 					case Keyboard::Left:
-						snake_dir = SnakeDirection::LEFT;
+						if (last_snake_dir != SnakeDirection::RIGHT)
+							snake_dir = SnakeDirection::LEFT;
 						break;
 					case Keyboard::Right:
-						snake_dir = SnakeDirection::RIGHT;
+						if (last_snake_dir != SnakeDirection::LEFT)
+							snake_dir = SnakeDirection::RIGHT;
 						break;
 				}
 
@@ -213,7 +237,7 @@ int main() {
 
 		window.clear(Color::Color(34, 32, 52, 255));
 
-		for (int i = 0; i < snake_length; i++) {
+		for (int i = 0; i < (snake_length - 1); i++) {
 			bodyrender.setPosition(prev_snake_x[i] * (defwinwidth / width), prev_snake_y[i] * (defwinwidth / width));
 			window.draw(bodyrender);
 		}

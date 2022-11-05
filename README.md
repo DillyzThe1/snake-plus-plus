@@ -2,7 +2,11 @@
 A C++ recreation of "Snake" to learn about C++ game development and libraries.<br>
 Made with the intent to learn and without any intent to make profit.
 ### Playing
-download and run lmao
+Download a release build <a href="https://github.com/DillyzThe1/snake-plus-plus/releases/latest">here</a> and run it. (or, <a href="https://github.com/DillyzThe1/snake-plus-plus#compiling">compile it yourself</a>.)<br>
+*NOTE: ONLY FOR WINDOWS!!!!*<br>
+<br>
+If you want more C++ projects like this, please leave suggestions on my Discord server!<br>
+(yes ik it's called a modding lounge but i really don't care)
 ### Compiling
 First, make sure you have <a href="https://visualstudio.microsoft.com/vs/older-downloads/#visual-studio-2019-and-other-products">Visual Studio 2019</a> installed.<br>
 Then, download this project with the "code" button or by cloning the repository.<br>

@@ -5,10 +5,23 @@
 using namespace std;
 using namespace sf;
 
-const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24;
+enum SnakeDirection {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
 
+const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 20;
+long lastTickTime = 0;
 int apple_x = 0, apple_y = 0;
 RectangleShape apple;
+
+int snake_head_x = 0, snake_head_y = 0, snake_length = 3, spawn_boundries = 4;
+SnakeDirection snake_dir = UP;
+RectangleShape snakehead;
+
+int score = 0;
 
 int getrand() {
 	srand(time(NULL));
@@ -21,7 +34,15 @@ int rand_int(int min, int max) {
 	return num + min;
 }
 
+bool snake_head_at(int x, int y) {
+	if (snake_head_x == x && snake_head_y == y)
+		return true;
+	return false;
+}
+
 bool snake_at(int x, int y) {
+	if (snake_head_at(x, y))
+		return true;
 	return false;
 }
 
@@ -36,6 +57,46 @@ void apple_respawn() {
 	}
 
 	apple.setPosition(apple_x * (defwinwidth / width), apple_y * (defwinwidth / height));
+}
+
+void snake_respawn() {
+	score = 0;
+	snake_dir = UP;
+	snake_length = 3;
+	apple_respawn();
+
+	snake_head_x = rand_int(spawn_boundries, width - spawn_boundries);
+	snake_head_y = height - spawn_boundries;
+}
+
+void tick() {
+	//cout << "Tick!\n";
+
+	switch (snake_dir) {
+		case SnakeDirection::UP:
+			snake_head_y -= 1;
+			break;
+		case SnakeDirection::DOWN:
+			snake_head_y += 1;
+			break;
+		case SnakeDirection::LEFT:
+			snake_head_x -= 1;
+			break;
+		case SnakeDirection::RIGHT:
+			snake_head_x += 1;
+			break;
+		default:
+			cout << "Invalid Snake Tick! ";
+			cout << snake_dir;
+			cout << "\n";
+			break;
+	}
+
+	if (snake_head_at(apple_x, apple_y)) {
+		score += 100;
+		snake_length++;
+		apple_respawn();
+	}
 }
 
 int main() {
@@ -55,20 +116,48 @@ int main() {
 		cout << "Icon loading FAIL!";
 
 	apple.setFillColor(Color::Color(172, 50, 50, 255));
-	apple_respawn();
 	apple.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
 
+	snakehead.setFillColor(Color::Color(152, 229, 80, 255));
+	snakehead.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
+
+	snake_respawn();
+
 	while (window.isOpen()) {
+
+		long cpuTime = clock();
+		if (cpuTime - lastTickTime >= 1000 / tps)
+		{
+			lastTickTime = cpuTime;
+			tick();
+		}
+
 		Event e;
 		while (window.pollEvent(e)) {
 			if (e.type == Event::Closed)
 				window.close();
 
 			if (e.type == Event::KeyPressed)
-				if (e.key.code == Keyboard::Escape)
-					window.close();
-				else if (e.key.code == Keyboard::Enter)
-					apple_respawn();
+				switch(e.key.code) {
+					case Keyboard::Escape:
+						window.close();
+						break;
+					case Keyboard::Enter:
+						snake_respawn();
+						break;
+					case Keyboard::Up:
+						snake_dir = SnakeDirection::UP;
+						break;
+					case Keyboard::Down:
+						snake_dir = SnakeDirection::DOWN;
+						break;
+					case Keyboard::Left:
+						snake_dir = SnakeDirection::LEFT;
+						break;
+					case Keyboard::Right:
+						snake_dir = SnakeDirection::RIGHT;
+						break;
+				}
 
 			if (e.type == Event::Resized)
 			{
@@ -77,8 +166,11 @@ int main() {
 			}
 		}
 
+		snakehead.setPosition(snake_head_x * (defwinwidth / width), snake_head_y * (defwinwidth / height));
+
 		window.clear(Color::Color(34, 32, 52, 255));
 		window.draw(apple);
+		window.draw(snakehead);
 		window.display();
 	}
 

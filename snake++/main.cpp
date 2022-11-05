@@ -28,7 +28,7 @@ RectangleShape bodyrender;
 
 int score = 0;
 
-RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
+RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1 v0.5b");
 
 int getrand() {
 	srand(time(NULL));
@@ -107,16 +107,16 @@ void tick() {
 
 	switch (snake_dir) {
 		case SnakeDirection::UP:
-			snake_head_y -= 1;
+			snake_head_y--;
 			break;
 		case SnakeDirection::DOWN:
-			snake_head_y += 1;
+			snake_head_y++;
 			break;
 		case SnakeDirection::LEFT:
-			snake_head_x -= 1;
+			snake_head_x--;
 			break;
 		case SnakeDirection::RIGHT:
-			snake_head_x += 1;
+			snake_head_x++;
 			break;
 		default:
 			cout << "Invalid Snake Tick! ";
@@ -127,7 +127,7 @@ void tick() {
 
 	if (snake_head_at(apple_x, apple_y)) {
 		score += 100;
-		snake_length += 1;
+		snake_length++;
 
 		cout << "New snake length: ";
 		cout << snake_length;

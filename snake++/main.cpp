@@ -31,13 +31,12 @@ int score = 0;
 RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
 
 int getrand() {
-	srand(time(NULL));
+	srand(rand() * time(NULL) * rand() * 0.5);
 	return rand();
 }
 
 int rand_int(int min, int max) {
-	srand(rand() * time(NULL) * rand() * 0.5);
-	int num = rand() % (max - min);
+	int num = getrand() % (max - min);
 	return num + min;
 }
 

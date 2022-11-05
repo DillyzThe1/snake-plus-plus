@@ -5,15 +5,16 @@
 using namespace std;
 using namespace sf;
 
+
+const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 16, max_length = ((width - 1) * (height - 1));
+long lastTickTime = 0;
+
 enum SnakeDirection {
 	UP,
 	DOWN,
 	LEFT,
 	RIGHT
 };
-
-const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 16, max_length = ((width - 1) * (height - 1));
-long lastTickTime = 0;
 
 int apple_x = 0, apple_y = 0;
 RectangleShape apple;
@@ -27,6 +28,8 @@ RectangleShape bodyrender;
 
 int score = 0;
 
+RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
+
 int getrand() {
 	srand(time(NULL));
 	return rand();
@@ -38,16 +41,21 @@ int rand_int(int min, int max) {
 	return num + min;
 }
 
-bool snake_head_at(int x, int y) {
-	if (snake_head_x == x && snake_head_y == y)
+bool snake_head_at(int xx, int yy) {
+	if (snake_head_x == xx && snake_head_y == yy)
 		return true;
 	return false;
 }
 
-bool snake_at(int x, int y) {
-	if (snake_head_at(x, y))
-		return true;
+bool snake_body_at(int xx, int yy) {
+	for (int i = 0; i < snake_length; i++)
+		if (prev_snake_x[i] == xx && prev_snake_y[i] == yy)
+			return true;
 	return false;
+}
+
+bool snake_at(int xx, int yy) {
+	return snake_head_at(xx, yy) || snake_body_at(xx, yy);
 }
 
 void apple_respawn() {
@@ -127,13 +135,15 @@ void tick() {
 
 		apple_respawn();
 	}
+
+	if (snake_body_at(snake_head_x, snake_head_y))
+		snake_respawn();
 }
 
 int main() {
 	srand(time(0));
 	cout << "C++ is cool.\n";
 
-	RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
 	window.setFramerateLimit(120);
 
 	Texture icon;

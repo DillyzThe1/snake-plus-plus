@@ -12,14 +12,18 @@ enum SnakeDirection {
 	RIGHT
 };
 
-const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 16;
+const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 16, max_length = ((width - 1) * (height - 1));
 long lastTickTime = 0;
+
 int apple_x = 0, apple_y = 0;
 RectangleShape apple;
 
 int snake_head_x = 0, snake_head_y = 0, snake_length = 3, spawn_boundries = 4;
 SnakeDirection snake_dir = UP;
 RectangleShape snakehead;
+
+int prev_snake_x[max_length], prev_snake_y[max_length];
+RectangleShape bodyrender;
 
 int score = 0;
 
@@ -69,8 +73,29 @@ void snake_respawn() {
 	snake_head_y = height - spawn_boundries;
 }
 
+void insert_prev(int xx, int yy) {
+	int lastx = prev_snake_x[0];
+	int lasty = prev_snake_y[0];
+
+	for (int i = 1; i < max_length - 1; i++) {
+		int almostlastx = prev_snake_x[i];
+		int almostlasty = prev_snake_y[i];
+
+		prev_snake_x[i] = lastx;
+		prev_snake_y[i] = lasty;
+
+		lastx = almostlastx;
+		lasty = almostlasty;
+	}
+
+	prev_snake_x[0] = xx;
+	prev_snake_y[0] = yy;
+}
+
 void tick() {
 	//cout << "Tick!\n";
+
+	insert_prev(snake_head_x, snake_head_y);
 
 	switch (snake_dir) {
 		case SnakeDirection::UP:
@@ -94,14 +119,19 @@ void tick() {
 
 	if (snake_head_at(apple_x, apple_y)) {
 		score += 100;
-		snake_length++;
+		snake_length += 1;
+
+		cout << "New snake length: ";
+		cout << snake_length;
+		cout << "\n";
+
 		apple_respawn();
 	}
 }
 
 int main() {
 	srand(time(0));
-	cout << "C++ is cool.";
+	cout << "C++ is cool.\n";
 
 	RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
 	window.setFramerateLimit(120);
@@ -120,6 +150,9 @@ int main() {
 
 	snakehead.setFillColor(Color::Color(152, 229, 80, 255));
 	snakehead.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
+
+	bodyrender.setFillColor(Color::Color(106, 190, 48, 255));
+	bodyrender.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
 
 	snake_respawn();
 
@@ -157,6 +190,16 @@ int main() {
 					case Keyboard::Right:
 						snake_dir = SnakeDirection::RIGHT;
 						break;
+					case Keyboard::P:
+						cout << prev_snake_x[4];
+						cout << ", ";
+						cout << prev_snake_y[4];
+						cout << "\n";
+						cout << prev_snake_x[7];
+						cout << ", ";
+						cout << prev_snake_y[7];
+						cout << "\n";
+						break;
 				}
 
 			if (e.type == Event::Resized)
@@ -169,6 +212,12 @@ int main() {
 		snakehead.setPosition(snake_head_x * (defwinwidth / width), snake_head_y * (defwinwidth / height));
 
 		window.clear(Color::Color(34, 32, 52, 255));
+
+		for (int i = 0; i < snake_length; i++) {
+			bodyrender.setPosition(prev_snake_x[i] * (defwinwidth / width), prev_snake_y[i] * (defwinwidth / width));
+			window.draw(bodyrender);
+		}
+
 		window.draw(apple);
 		window.draw(snakehead);
 		window.display();

@@ -91,11 +91,13 @@ void snake_respawn() {
 	last_snake_dir = UP;
 	apple_respawn();
 
-	prev_snake_x[0] = prev_snake_x[1] = snake_head_x = rand_int(spawn_boundries, width - spawn_boundries);
+	snake_head_x = rand_int(spawn_boundries, width - spawn_boundries);
 	snake_head_y = height - spawn_boundries;
 
-	prev_snake_y[0] = snake_head_y + 1;
-	prev_snake_y[1] = snake_head_y + 2;
+	for (int i = 0; i < max_length; i++) {
+		prev_snake_x[i] = snake_head_x;
+		prev_snake_y[i] = snake_head_y + i + 1;
+	}
 }
 
 void insert_prev(int xx, int yy) {

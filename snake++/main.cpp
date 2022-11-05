@@ -12,7 +12,7 @@ enum SnakeDirection {
 	RIGHT
 };
 
-const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 20;
+const int defwinwidth = 480, defwinheight = 480, width = 24, height = 24, tps = 16;
 long lastTickTime = 0;
 int apple_x = 0, apple_y = 0;
 RectangleShape apple;

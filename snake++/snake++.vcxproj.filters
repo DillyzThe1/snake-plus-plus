@@ -37,11 +37,11 @@
     <None Include="dlls\x64\sfml-system-d-2.dll">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="dlls\x64\sfml-window-2.dll">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
+    <CopyFileToFolders Include="dlls\x64\sfml-window-2.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
     <CopyFileToFolders Include="dlls\x64\sfml-window-d-2.dll">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>

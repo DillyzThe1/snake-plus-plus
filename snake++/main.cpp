@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <time.h>
+#include <windows.h>
 
 using namespace std;
 using namespace sf;
@@ -161,20 +162,26 @@ void tick() {
 		snake_respawn();
 }
 
+void render() {
+	snakehead.setPosition(snake_head_x * (defwinwidth / width), snake_head_y * (defwinwidth / height));
+
+	window.clear(Color::Color(34, 32, 52, 255));
+
+	for (int i = 0; i < (snake_length - 1); i++) {
+		bodyrender.setPosition(prev_snake_x[i] * (defwinwidth / width), prev_snake_y[i] * (defwinwidth / width));
+		window.draw(bodyrender);
+	}
+
+	window.draw(apple);
+	window.draw(snakehead);
+	window.display();
+}
+
 int main() {
 	srand(time(0));
 	cout << "C++ is cool.\n";
 
 	window.setFramerateLimit(120);
-
-	Texture icon;
-	if (icon.loadFromFile("images/logo.png")) {
-		Image iconImg;
-		iconImg = icon.copyToImage();
-		window.setIcon(350, 350, iconImg.getPixelsPtr());
-	}
-	else
-		cout << "Icon loading FAIL!";
 
 	apple.setFillColor(Color::Color(172, 50, 50, 255));
 	apple.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
@@ -186,6 +193,20 @@ int main() {
 	bodyrender.setSize(Vector2f::Vector2(defwinwidth / width, defwinwidth / height));
 
 	snake_respawn();
+
+	Texture icon;
+	if (icon.loadFromFile("images/logo.png")) {
+		Image iconImg;
+		iconImg = icon.copyToImage();
+		window.setIcon(350, 350, iconImg.getPixelsPtr());
+	}
+	else {
+		cout << "Icon loading FAIL!";
+		// makes sure to actually show the game before throwing the error
+		render();
+		MessageBoxW(NULL, L"Icon has failed to load!\nPlease submit an issue on Github!\n(Hit I to open issues while playing)\n\n-DillyzThe1",
+			L"Snake++ by DillyzThe1", MB_OK | MB_ICONINFORMATION);
+	}
 
 	while (window.isOpen()) {
 
@@ -225,6 +246,9 @@ int main() {
 						if (last_snake_dir != SnakeDirection::LEFT)
 							snake_dir = SnakeDirection::RIGHT;
 						break;
+					case Keyboard::I:
+						system("start https://github.com/DillyzThe1/snake-plus-plus");
+						break;
 				}
 
 			if (e.type == Event::Resized)
@@ -234,18 +258,7 @@ int main() {
 			}
 		}
 
-		snakehead.setPosition(snake_head_x * (defwinwidth / width), snake_head_y * (defwinwidth / height));
-
-		window.clear(Color::Color(34, 32, 52, 255));
-
-		for (int i = 0; i < (snake_length - 1); i++) {
-			bodyrender.setPosition(prev_snake_x[i] * (defwinwidth / width), prev_snake_y[i] * (defwinwidth / width));
-			window.draw(bodyrender);
-		}
-
-		window.draw(apple);
-		window.draw(snakehead);
-		window.display();
+		render();
 	}
 
 	return 0;

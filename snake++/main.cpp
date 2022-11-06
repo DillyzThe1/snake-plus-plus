@@ -160,10 +160,12 @@ void tick() {
 		snake_respawn();
 }
 
+Color bgcolor(34, 32, 52, 255);
+
 void render() {
 	snakehead.setPosition(snake_head_x * (defwinwidth / width), snake_head_y * (defwinwidth / height));
 
-	window.clear(Color::Color(34, 32, 52, 255));
+	window.clear(bgcolor);
 
 	for (int i = 0; i < (snake_length - 1); i++) {
 		bodyrender.setPosition(prev_snake_x[i] * (defwinwidth / width), prev_snake_y[i] * (defwinwidth / width));

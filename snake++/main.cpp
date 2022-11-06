@@ -199,7 +199,7 @@ int main() {
 		window.setIcon(350, 350, iconImg.getPixelsPtr());
 	}
 	else {
-		cout << "Icon loading FAIL!";
+		cout << "Icon loading FAIL!\n";
 		// makes sure to actually show the game before throwing the error
 		render();
 		MessageBoxW(NULL, L"Icon has failed to load!\nPlease submit an issue on Github!\n(Hit I to open issues while playing)\n\n-DillyzThe1",

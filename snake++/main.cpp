@@ -28,7 +28,7 @@ RectangleShape bodyrender;
 
 int score = 0;
 
-RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1");
+RenderWindow window(VideoMode(defwinwidth, defwinheight), "Snake++ by DillyzThe1 v1.1");
 
 int getrand() {
 	srand(rand() * time(NULL) * rand() * 0.5);

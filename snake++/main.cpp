@@ -139,9 +139,7 @@ void tick() {
 			snake_head_x++;
 			break;
 		default:
-			cout << "Invalid Snake Tick! ";
-			cout << snake_dir;
-			cout << "\n";
+			cout << "Invalid Snake Tick! " << snake_dir << "\n";
 			break;
 	}
 

@@ -205,7 +205,7 @@ int main() {
 		// makes sure to actually show the game before throwing the error
 		render();
 		MessageBoxW(NULL, L"Icon has failed to load!\nPlease submit an issue on Github!\n(Hit I to open issues while playing)\n\n-DillyzThe1",
-			L"Snake++ by DillyzThe1", MB_OK | MB_ICONINFORMATION);
+			L"Snake++ by DillyzThe1 v1.1b", MB_OK | MB_ICONINFORMATION);
 	}
 
 	while (window.isOpen()) {
